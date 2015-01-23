@@ -23,7 +23,11 @@ import (
 
 func init() {
   r := mux.NewRouter().StrictSlash(false)
-  // r.HandleFunc("/", HomeHandler)
+
+  // all API routes starts here
+  r.HandleFunc("/", homePageHandler)
+  r.HandleFunc("/t/{tag}", tagPageHandler)
+  r.HandleFunc("/v/{id}", videoPageHandler)
 
   // videos collection
   videos := r.Path("/videos").Subrouter()
@@ -36,6 +40,8 @@ func init() {
   video.Methods("PUT", "POST").HandlerFunc(videoUpdateHandler)
   video.Methods("DELETE").HandlerFunc(videoDeleteHandler)
 
+  // Youtube crawler APIs
+
   // discover videos with a given query q
   ytCrawl := r.PathPrefix("/crawler/yt").Subrouter()
   ytCrawl.Path("/crawl").HandlerFunc(crawlVideos)
@@ -45,10 +51,27 @@ func init() {
   http.Handle("/", r)
 }
 
+func homePageHandler(w http.ResponseWriter, r *http.Request) {
+  // TODO (jacob): replace with actual content
+  fmt.Fprintf(w, "Home page .. coming soon")
+}
+
+func tagPageHandler(w http.ResponseWriter, r *http.Request) {
+  // TODO (jacob): replace with actual content
+  vars := mux.Vars(r)
+  tag := vars["tag"]
+  fmt.Fprintf(w, "videos for tag %v to be displayed here", tag)
+}
+
+func videoPageHandler(w http.ResponseWriter, r *http.Request) {
+  // TODO (jacob): replace with actual content
+  vars := mux.Vars(r)
+  id := vars["id"]
+  fmt.Fprintf(w, "video with %v to be displayed here", id)
+}
+
 func VideoIndexHandler(w http.ResponseWriter, r *http.Request) {
-
   q := datastore.NewQuery("Video")
-
   tag := r.URL.Query().Get("tag")
   if tag != "" {
     q = q.Filter("Tags =", tag)

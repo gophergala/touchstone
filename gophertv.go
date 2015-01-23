@@ -29,6 +29,7 @@ func init() {
   r.HandleFunc("/", homePageHandler)
   r.HandleFunc("/t/{tag}", tagPageHandler)
   r.HandleFunc("/v/{id}", videoPageHandler)
+  r.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./public"))))
 
   // curation pages
   curateRoutes := r.PathPrefix("/curate").Subrouter()
@@ -60,7 +61,8 @@ func init() {
 
 func homePageHandler(w http.ResponseWriter, r *http.Request) {
   // TODO (jacob): replace with actual content
-  fmt.Fprintf(w, "Home page .. coming soon")
+  //  fmt.Fprintf(w, "Home page .. coming soon")
+  http.ServeFile(w, r, "public/index.html")
 }
 
 func tagPageHandler(w http.ResponseWriter, r *http.Request) {

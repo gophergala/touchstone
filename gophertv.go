@@ -7,6 +7,7 @@ package gophertv
 import (
   "encoding/json"
   "fmt"
+  "html/template"
   "io/ioutil"
   "log"
   "net/http"
@@ -28,6 +29,12 @@ func init() {
   r.HandleFunc("/", homePageHandler)
   r.HandleFunc("/t/{tag}", tagPageHandler)
   r.HandleFunc("/v/{id}", videoPageHandler)
+
+  // curation pages
+  curateRoutes := r.PathPrefix("/curate").Subrouter()
+  curateRoutes.Path("/list").HandlerFunc(curateListHandler)
+  curateRoutes.Path("/delete_all").Methods("POST").HandlerFunc(deleteAllHandler)
+  // curateRoutes.Path("/video/{id}").HandlerFunc(curateVideoHandler)
 
   // videos collection
   videos := r.Path("/videos").Subrouter()
@@ -70,6 +77,22 @@ func videoPageHandler(w http.ResponseWriter, r *http.Request) {
   fmt.Fprintf(w, "video with %v to be displayed here", id)
 }
 
+func deleteAllHandler(w http.ResponseWriter, r *http.Request) {
+  q := datastore.NewQuery("Video").Limit(400).KeysOnly()
+  var videos []Video
+  c := appengine.NewContext(r)
+  keys, err := q.GetAll(c, &videos)
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+  err = datastore.DeleteMulti(c, keys)
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+  w.WriteHeader(http.StatusOK)
+}
 func VideoIndexHandler(w http.ResponseWriter, r *http.Request) {
   q := datastore.NewQuery("Video")
   tag := r.URL.Query().Get("tag")
@@ -126,6 +149,48 @@ func VideoIndexHandler(w http.ResponseWriter, r *http.Request) {
   }
   w.Header().Set("Content-Type", "application/json")
   w.Write(jsn)
+}
+
+func curateListHandler(w http.ResponseWriter, r *http.Request) {
+  q := datastore.NewQuery("Video").
+    Filter("IsCurated =", false).Order("-ViewCount").Limit(10)
+
+  var n int64
+  var err error
+  offset := r.URL.Query().Get("offset")
+  if offset != "" {
+    n, err = strconv.ParseInt(offset, 10, 64)
+    if err != nil {
+      http.Error(w, err.Error(), http.StatusInternalServerError)
+      return
+    }
+    log.Printf("current offset: %d", n)
+    q = q.Offset(int(n))
+  }
+  c := appengine.NewContext(r)
+  var videos []Video
+  _, err = q.GetAll(c, &videos)
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+  t, err := template.ParseFiles("public/templates/curation/list.html")
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+  log.Printf("executing the template, new offset: n: %d len: %d", n, len(videos))
+  err = t.Execute(w, struct {
+    Videos []Video
+    Offset int
+  }{
+    Videos: videos,
+    Offset: int(n) + len(videos),
+  })
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
 }
 
 // Video resource REST functions

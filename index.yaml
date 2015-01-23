@@ -19,6 +19,12 @@ indexes:
 
 - kind: Video
   properties:
+  - name: IsCurated
+  - name: ViewCount
+    direction: desc
+
+- kind: Video
+  properties:
   - name: Tags
   - name: ViewCount
     direction: desc

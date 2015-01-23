@@ -25,7 +25,6 @@ import (
 func init() {
   r := mux.NewRouter().StrictSlash(false)
 
-  // all API routes starts here
   r.HandleFunc("/", homePageHandler)
   r.HandleFunc("/t/{tag}", tagPageHandler)
   r.HandleFunc("/v/{id}", videoPageHandler)
@@ -35,7 +34,9 @@ func init() {
   curateRoutes := r.PathPrefix("/curate").Subrouter()
   curateRoutes.Path("/list").HandlerFunc(curateListHandler)
   curateRoutes.Path("/delete_all").Methods("POST").HandlerFunc(deleteAllHandler)
-  // curateRoutes.Path("/video/{id}").HandlerFunc(curateVideoHandler)
+  curateRoutes.Path("/v/{id}").HandlerFunc(curateVideoHandler)
+
+  // all API routes starts here
 
   // videos collection
   videos := r.Path("/videos").Subrouter()
@@ -189,6 +190,33 @@ func curateListHandler(w http.ResponseWriter, r *http.Request) {
     Videos: videos,
     Offset: int(n) + len(videos),
   })
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+}
+
+func curateVideoHandler(w http.ResponseWriter, r *http.Request) {
+  vars := mux.Vars(r)
+  id := vars["id"]
+  var video Video
+  c := appengine.NewContext(r)
+  key := datastore.NewKey(c, "Video", id, 0, nil)
+  err := datastore.Get(c, key, &video)
+  if err != nil {
+    if err == datastore.ErrNoSuchEntity {
+      http.Error(w, "video not found", http.StatusNotFound)
+      return
+    }
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+  t, err := template.ParseFiles("public/templates/curation/video.html")
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+  err = t.Execute(w, video)
   if err != nil {
     http.Error(w, err.Error(), http.StatusInternalServerError)
     return

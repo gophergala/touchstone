@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+
+<head>
+<!--	<link rel="stylesheet" href="public/stylesheets/screen.css" /> -->
+</head>
+
+<body>
+
+<div class="wrap">
+  <h2>{{ .Title }}</h2>
+  <p>{{ .Desc }}</p>
+  <div id="ytplayer"></div>
+
+  <script>
+// Load the IFrame Player API code asynchronously.
+  var tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/player_api";
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+  // Replace the 'ytplayer' element with an <iframe> and
+  // YouTube player after the API code downloads.
+  var player;
+  function onYouTubePlayerAPIReady() {
+    player = new YT.Player('ytplayer', {
+height: '390',
+width: '640',
+videoId: '{{ .ID }}'
+
+});
+
+}
+  </script>
+
+  <ul>
+    <li>
+      <label>Default Thumbnail </label>
+  <img src="{{ .DefaultThumbnail.URL }}" />
+  </li>
+  <li>
+  <label> Medium Thumbnail </label>
+    <img src="{{ .MediumThumbnail.URL }}" />
+  </li>
+  <li>
+  <label> HighresThumbnail </label>
+  <img src="{{ .HighresThumbnail.URL }}" />
+  </li>
+  <li>
+    <label> Standard Thumbnail </label>
+  <img src="{{ .StandardThumbnail.URL }}" />
+  </li>
+  <li>
+  <label> Maxres Thumbnail </label>
+  <img src="{{ .MaxresThumbnail.URL }}" />
+  </li>
+  </ul>
+</div>
+
+</body>
+
+</html>

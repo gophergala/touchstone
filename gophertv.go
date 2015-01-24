@@ -81,7 +81,6 @@ func videoPageHandler(w http.ResponseWriter, r *http.Request) {
 	// TODO (jacob): replace with actual content
 	vars := mux.Vars(r)
 	id := vars["id"]
-	fmt.Fprintf(w, "video with %v to be displayed here", id)
 	var video Video
 	c := appengine.NewContext(r)
 	key := datastore.NewKey(c, "Video", id, 0, nil)
@@ -95,7 +94,7 @@ func videoPageHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	jsn, err := json.Marshall(video)
+	jsn, err := json.Marshal(video)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

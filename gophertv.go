@@ -65,8 +65,6 @@ func init() {
 }
 
 func homePageHandler(w http.ResponseWriter, r *http.Request) {
-	// TODO (jacob): replace with actual content
-	//  fmt.Fprintf(w, "Home page .. coming soon")
 	http.ServeFile(w, r, "public/index.html")
 }
 
@@ -74,11 +72,32 @@ func tagPageHandler(w http.ResponseWriter, r *http.Request) {
 	// TODO (jacob): replace with actual content
 	vars := mux.Vars(r)
 	tag := vars["tag"]
-	fmt.Fprintf(w, "videos for tag %v to be displayed here", tag)
+	q := datastore.NewQuery("Video")
+	if tag != "" {
+		q = q.Filter("Tags =", tag)
+	}
+	c := appengine.NewContext(r)
+	var videos []Video
+	_, err := q.GetAll(c, &videos)
+	if err != nil {
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	if len(videos) == 0 {
+		videos = []Video{}
+	}
+
+	jsn, err := json.Marshal(&videos)
+	if err != nil {
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsn)
 }
 
 func videoPageHandler(w http.ResponseWriter, r *http.Request) {
-	// TODO (jacob): replace with actual content
 	vars := mux.Vars(r)
 	id := vars["id"]
 	var video Video

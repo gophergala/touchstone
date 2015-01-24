@@ -42,8 +42,10 @@ tvcontrollers.controller('VideoCtrl', [ '$scope', '$http', '$location',
 										tag.src = "https://www.youtube.com/player_api";
 										var firstScriptTag = document.getElementsByTagName('script')[0];
 										firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+									};
+								}]);
 
-										// Replace the 'ytplayer' element with an <iframe> and
+// Replace the 'ytplayer' element with an <iframe> and
 										// YouTube player after the API code downloads.
 										var player;
 										function onYouTubePlayerAPIReady() {
@@ -54,5 +56,3 @@ tvcontrollers.controller('VideoCtrl', [ '$scope', '$http', '$location',
 												videoId: id
 											});
 										}	
-									};
-								}]);

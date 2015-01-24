@@ -1,6 +1,6 @@
-<div class="Category">
+<div class="Category" ng-repeat="category in categories">
 
-				<h2> {{CategoryName}}</h2>
+				<h2> {{category.CategoryName}}</h2>
 
 				<ul class="VideosShort" ng-repeat="video in category.videos">
 					<li>

@@ -2,7 +2,8 @@ var tvcontrollers = angular.module('tvControllers', [] );
 
 tvcontrollers.controller('HomeCtrl', [ '$scope', '$http',
 								function($scope, $http) {
-									$scope.categories = [];	
+									$scope.categories = [];
+									//$scope.categories = [ {"CategoryName": "One", "videos": [{"Title": "Video Title"}]}];	
 
 									$http.get('playlists').success(function(data) {
 										for (var key in data) {
@@ -11,7 +12,7 @@ tvcontrollers.controller('HomeCtrl', [ '$scope', '$http',
   											}
 										}
 
-										console.log($scope.categories.Keys());
+									//	console.log($scope.categories.Keys());
 									});
 								}]);
 

@@ -29,8 +29,32 @@ tvcontrollers.controller('CategoryDetailCtrl', [ '$scope', '$http',
 
 tvcontrollers.controller('VideoCtrl', [ '$scope', '$http', 
 								function($scope, $http) {
-									$http.get('videoDetailRoute').success(function(data) {
-										$scope.videoDetails = data;
+									$http.get('video/').success(function(data) {
+										$scope.video = data;
+										
+										angular.element(document).ready(function () {
+													$scope.setupYoutubePlayer();
+													console.log('Hello World');
+    								});
 									});
 									
+									$scope.setupYoutubePlayer = function() {
+										// Load the IFrame Player API code asynchronously.
+										var tag = document.createElement('script');
+										tag.src = "https://www.youtube.com/player_api";
+										var firstScriptTag = document.getElementsByTagName('script')[0];
+										firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+										// Replace the 'ytplayer' element with an <iframe> and
+										// YouTube player after the API code downloads.
+										var player;
+										function onYouTubePlayerAPIReady() {
+											var id = document.getElementById('video_id').value;
+											player = new YT.Player('ytplayer', {
+												height: '390',
+												width: '640',
+												videoId: id
+											});
+										}	
+									};
 								}]);

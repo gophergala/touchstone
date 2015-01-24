@@ -1,4 +1,4 @@
-var tvcontrollers = angular.module('tvControllers', [] );
+var tvcontrollers = angular.module('tvControllers', ['youtube-embed'] );
 
 tvcontrollers.controller('HomeCtrl', [ '$scope', '$http', '$location',
 								function($scope, $http, $location) {
@@ -27,13 +27,17 @@ tvcontrollers.controller('CategoryDetailCtrl', [ '$scope', '$http',
 
 								}]);
 
-tvcontrollers.controller('VideoCtrl', [ '$scope', '$http', '$location', 
+tvcontrollers.controller('VideoCtrl', [ '$scope', '$http', '$location',
 								function($scope, $http, $location) {
 								  var vid_id = $location.path().split('/');
 									vid_id = vid_id[vid_id.length - 1];
+
+									$scope.youtubevideo = vid_id;
+
 									$http.get('v/' + vid_id).success(function(data) {
 										$scope.video = data;
-										$scope.setupYoutubePlayer();
+										
+									//	$scope.setupYoutubePlayer();
 									});
 									
 									$scope.setupYoutubePlayer = function() {

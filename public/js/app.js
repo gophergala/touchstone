@@ -4,7 +4,7 @@ gophertv.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
       when('/', {
-        templateUrl: 'public/templates/list.html',
+        templateUrl: '/public/templates/list.html',
         controller: 'HomeCtrl'
       }).
 			when('/video/:videoId', {

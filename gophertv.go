@@ -26,6 +26,7 @@ import (
 func init() {
   r := mux.NewRouter().StrictSlash(false)
 
+  // main site pages goes here
   r.HandleFunc("/", homePageHandler)
   r.HandleFunc("/t/{tag}", tagPageHandler)
   r.HandleFunc("/v/{id}", videoPageHandler)
@@ -42,6 +43,8 @@ func init() {
   // videos collection
   videos := r.Path("/videos").Subrouter()
   videos.Methods("GET").HandlerFunc(VideoIndexHandler)
+
+  r.HandleFunc("/playlists", playlistHandler)
 
   // videos singular
   video := r.PathPrefix("/videos/{id}").Subrouter()
@@ -149,6 +152,39 @@ func VideoIndexHandler(w http.ResponseWriter, r *http.Request) {
   jsn, err := json.Marshal(&videos)
   if err != nil {
     http.Error(w, "internal server error", http.StatusInternalServerError)
+    return
+  }
+  w.Header().Set("Content-Type", "application/json")
+  w.Write(jsn)
+}
+
+func playlistHandler(w http.ResponseWriter, r *http.Request) {
+  var videos []Video
+  response := make(map[string][]*Video)
+
+  q := datastore.NewQuery("Video").Order("-ViewCount").Limit(60)
+  c := appengine.NewContext(r)
+  _, err := q.GetAll(c, &videos)
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+
+  tags := []string{"concurrency", "interviews", "Go philosophy", "Gophercon", "Dotgo", "testing", "tutorial"}
+
+  for i, v := range videos {
+    tagIndex := i % len(tags)
+    playlist, ok := response[tags[tagIndex]]
+    if !ok {
+      playlist = []*Video{}
+    }
+    playlist = append(playlist, &v)
+    response[tags[tagIndex]] = playlist
+  }
+
+  jsn, err := json.Marshal(response)
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
     return
   }
   w.Header().Set("Content-Type", "application/json")

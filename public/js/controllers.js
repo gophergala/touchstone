@@ -14,8 +14,8 @@ tvcontrollers.controller('HomeCtrl', [ '$scope', '$http', '$location',
 
 									});
 
-									$scope.navigateToVideo = function(id) {
-										$location.path('/video/' + id);
+									$scope.navigateToVideo = function(vid) {
+										$location.path('/v/' + vid.id);
 									};
 								}]);
 
@@ -27,9 +27,11 @@ tvcontrollers.controller('CategoryDetailCtrl', [ '$scope', '$http',
 
 								}]);
 
-tvcontrollers.controller('VideoCtrl', [ '$scope', '$http', 
-								function($scope, $http) {
-									$http.get('video/').success(function(data) {
+tvcontrollers.controller('VideoCtrl', [ '$scope', '$http', '$location', 
+								function($scope, $http, $location) {
+								  var vid_id = $location.path().split('/');
+									vid_id = vid_id[vid_id.length - 1];
+									$http.get('v/' + vid_id).success(function(data) {
 										$scope.video = data;
 
 										angular.element(document).ready(function () {

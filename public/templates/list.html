@@ -5,7 +5,7 @@
 				<ul class="VideosShort" ng-repeat="video in category.videos">
 					<li ng-click="navigateToVideo(video.id)">
 						<div class="title">{{ video.Title }}</div>
-						<div class="videoImage">{{ video.medium_thumbnail }}</div>
+						<div class="videoImage"><img src="{{ video.medium_thumbnail.URL }}" width="{{video.medium_thumbnail.Width}}" height="{{video.medium_thumbnail.Height}}"</div>
 						<div class="videoDate">{{ video.published_at }}</div>
 					</li>
 				</ul>

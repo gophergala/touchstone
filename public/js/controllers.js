@@ -1,7 +1,7 @@
 var tvcontrollers = angular.module('tvControllers', [] );
 
 tvcontrollers.controller('HomeCtrl', [ '$scope', '$http', '$location'
-								function($scope, $http) {
+								function($scope, $http, $location) {
 									$scope.categories = [];
 									//$scope.categories = [ {"CategoryName": "One", "videos": [{"Title": "Video Title"}]}];	
 

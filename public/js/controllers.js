@@ -1,6 +1,6 @@
 var tvcontrollers = angular.module('tvControllers', [] );
 
-tvcontrollers.controller('HomeCtrl', [ '$scope', '$http',
+tvcontrollers.controller('HomeCtrl', [ '$scope', '$http', '$location'
 								function($scope, $http) {
 									$scope.categories = [];
 									//$scope.categories = [ {"CategoryName": "One", "videos": [{"Title": "Video Title"}]}];	
@@ -13,6 +13,10 @@ tvcontrollers.controller('HomeCtrl', [ '$scope', '$http',
 										}
 
 									});
+
+									$scope.navigateToVideo = function(id) {
+										$location.path('/video/' + id);
+									};
 								}]);
 
 tvcontrollers.controller('CategoryDetailCtrl', [ '$scope', '$http',

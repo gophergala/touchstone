@@ -3,8 +3,10 @@
 				<h2> {{category.CategoryName}}</h2>
 
 				<ul class="VideosShort" ng-repeat="video in category.videos">
-					<li>
-					{{ video.Title }}
+					<li ng-click="navigateToVideo(video.id)">
+						<div class="title">{{ video.Title }}</div>
+						<div class="videoImage">{{ video.medium_thumbnail }}</div>
+						<div class="videoDate">{{ video.published_at }}</div>
 					</li>
 				</ul>
 

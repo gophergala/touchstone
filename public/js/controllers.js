@@ -14,8 +14,8 @@ tvcontrollers.controller('HomeCtrl', [ '$scope', '$http', '$location',
 
 									});
 
-									$scope.navigateToVideo = function(vid) {
-										$location.path('/v/' + vid.id);
+									$scope.navigateToVideo = function(id) {
+										$location.path('/video/' + id);
 									};
 								}]);
 
@@ -33,11 +33,7 @@ tvcontrollers.controller('VideoCtrl', [ '$scope', '$http', '$location',
 									vid_id = vid_id[vid_id.length - 1];
 									$http.get('v/' + vid_id).success(function(data) {
 										$scope.video = data;
-
-										angular.element(document).ready(function () {
-													$scope.setupYoutubePlayer();
-													console.log('Hello World');
-    								});
+										$scope.setupYoutubePlayer();
 									});
 									
 									$scope.setupYoutubePlayer = function() {

@@ -12,6 +12,7 @@ import (
   "log"
   "net/http"
   "strconv"
+  "strings"
   "time"
 
   "code.google.com/p/google-api-go-client/youtube/v3"
@@ -216,7 +217,7 @@ func curateVideoHandler(w http.ResponseWriter, r *http.Request) {
     http.Error(w, err.Error(), http.StatusInternalServerError)
     return
   }
-  err = t.Execute(w, video)
+  err = t.Execute(w, &video)
   if err != nil {
     http.Error(w, err.Error(), http.StatusInternalServerError)
     return
@@ -445,6 +446,14 @@ type Video struct {
   ContentDefinition string    `json:"content_definition"`
   ChannelID         string    `json:"channel_id"`
   ChannelTitle      string    `json:"channel_title"`
+}
+
+func (v *Video) TagString() string {
+  if v.Tags != nil && len(v.Tags) > 0 {
+    return strings.Join(v.Tags, ",")
+  } else {
+    return ""
+  }
 }
 
 type Thumbnail struct {

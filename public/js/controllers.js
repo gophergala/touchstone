@@ -31,7 +31,7 @@ tvcontrollers.controller('VideoCtrl', [ '$scope', '$http',
 								function($scope, $http) {
 									$http.get('video/').success(function(data) {
 										$scope.video = data;
-										
+
 										angular.element(document).ready(function () {
 													$scope.setupYoutubePlayer();
 													console.log('Hello World');

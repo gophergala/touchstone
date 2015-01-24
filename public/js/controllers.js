@@ -7,12 +7,11 @@ tvcontrollers.controller('HomeCtrl', [ '$scope', '$http',
 
 									$http.get('playlists').success(function(data) {
 										for (var key in data) {
-  										if (p.hasOwnProperty(key)) {
+  										if (data.hasOwnProperty(key)) {
 													$scope.categories.push({"CategoryName": key, "videos": data[key] });
   											}
 										}
 
-									//	console.log($scope.categories.Keys());
 									});
 								}]);
 

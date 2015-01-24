@@ -2,11 +2,17 @@ var tvcontrollers = angular.module('tvControllers', [] );
 
 tvcontrollers.controller('HomeCtrl', [ '$scope', '$http',
 								function($scope, $http) {
-									$http.get('route1').success(function(data) {
-										$scope.categories = data;
-									});
-								
 									$scope.categories = [];	
+
+									$http.get('playlists').success(function(data) {
+										for (var key in data) {
+  										if (p.hasOwnProperty(key)) {
+													$scope.categories.push({"CategoryName": key, "videos": data[key] });
+  											}
+										}
+
+										console.log($scope.categories.Keys());
+									});
 								}]);
 
 tvcontrollers.controller('CategoryDetailCtrl', [ '$scope', '$http',
@@ -14,7 +20,6 @@ tvcontrollers.controller('CategoryDetailCtrl', [ '$scope', '$http',
 									$http.get('controllerDetailRoute').success(function(data){
 										$scope.controllerInfo = data;
 									});
-									
 
 								}]);
 

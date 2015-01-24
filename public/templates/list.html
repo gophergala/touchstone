@@ -1,1 +1,11 @@
-This is list.html
+<div class="Category">
+
+				<h2> {{CategoryName}}</h2>
+
+				<ul class="VideosShort" ng-repeat="video in category.videos">
+					<li>
+					{{ video.Title }}
+					</li>
+				</ul>
+
+</div>

@@ -11,6 +11,7 @@ import (
   "io/ioutil"
   "log"
   "net/http"
+  "sort"
   "strconv"
   "strings"
   "time"
@@ -47,6 +48,7 @@ func init() {
   videos.Methods("GET").HandlerFunc(VideoIndexHandler)
 
   r.HandleFunc("/playlists", playlistHandler)
+  r.HandleFunc("/v2/playlists", v2playlistHandler)
 
   // videos singular
   video := r.PathPrefix("/videos/{id}").Subrouter()
@@ -193,6 +195,62 @@ func VideoIndexHandler(w http.ResponseWriter, r *http.Request) {
   jsn, err := json.Marshal(&videos)
   if err != nil {
     http.Error(w, "internal server error", http.StatusInternalServerError)
+    return
+  }
+  w.Header().Set("Content-Type", "application/json")
+  w.Write(jsn)
+}
+
+// A data structure to hold a key/value pair.
+type Pair struct {
+  Key    string  `json:"tag"`
+  Videos []Video `json:"videos"`
+}
+
+// A slice of Pairs that implements sort.Interface to sort by Value.
+type PairList []Pair
+
+func (p PairList) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
+func (p PairList) Len() int           { return len(p) }
+func (p PairList) Less(i, j int) bool { return len(p[i].Videos) > len(p[j].Videos) }
+
+// A function to turn a map into a PairList, then sort and return it.
+func sortMapByValue(m map[string][]Video) PairList {
+  p := make(PairList, len(m))
+  i := 0
+  for k, v := range m {
+    p[i] = Pair{k, v}
+    i++
+  }
+  sort.Sort(p)
+  // sort.Reverse(p)
+  return p
+}
+
+func v2playlistHandler(w http.ResponseWriter, r *http.Request) {
+  c := appengine.NewContext(r)
+  var videos []Video
+  q := datastore.NewQuery("Video").Filter("IsCurated =", true)
+  _, err := q.GetAll(c, &videos)
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+
+  tagMap := make(map[string][]Video)
+
+  for _, v := range videos {
+    for _, tag := range v.Tags {
+      tag = strings.Trim(strings.ToLower(tag), "")
+      tagMap[tag] = append(tagMap[tag], v)
+    }
+  }
+  c.Infof("number of curated videos : %d", len(videos))
+
+  tagByVideoCount := sortMapByValue(tagMap)
+  jsn, err := json.Marshal(tagByVideoCount)
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
     return
   }
   w.Header().Set("Content-Type", "application/json")

@@ -5,14 +5,8 @@ tvcontrollers.controller('HomeCtrl', [ '$scope', '$http', '$location',
 									$scope.categories = [];
 									//$scope.categories = [ {"CategoryName": "One", "videos": [{"Title": "Video Title"}]}];	
 
-									$http.get('v2/playlists').success(function(data) {
-										// for (var key in data) {
-  									// 	if (data.hasOwnProperty(key)) {
-										// 			$scope.categories.push({"CategoryName": key, "videos": data[key] });
-  									// 		}
-										// }
+									$http.get('playlists').success(function(data) {
                     $scope.categories = data;
-
 									});
 
 									$scope.navigateToHome = function(id) {
@@ -36,6 +30,9 @@ tvcontrollers.controller('CategoryDetailCtrl', [ '$scope', '$http', '$location',
 										$scope.videos = data;
 									});
 
+									$scope.navigateToVideo = function(id) {
+										$location.path('/video/' + id);
+									};
 								}]);
 
 tvcontrollers.controller('VideoCtrl', [ '$scope', '$http', '$location',
@@ -45,7 +42,7 @@ tvcontrollers.controller('VideoCtrl', [ '$scope', '$http', '$location',
 
 									$scope.youtubevideo = vid_id;
 
-									$http.get('v/' + vid_id).success(function(data) {
+									$http.get('videos/' + vid_id).success(function(data) {
 										$scope.video = data;
 										
 									//	$scope.setupYoutubePlayer();

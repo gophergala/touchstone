@@ -29,15 +29,9 @@ func init() {
 
   // main site pages goes here
   r.HandleFunc("/", homePageHandler)
-  r.HandleFunc("/t/{tag}", tagPageHandler)
-  r.HandleFunc("/v/{id}", videoPageHandler)
-  r.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./public"))))
 
-  // curation pages
-  curateRoutes := r.PathPrefix("/curate").Subrouter()
-  curateRoutes.Path("/list").HandlerFunc(curateListHandler)
-  curateRoutes.Path("/delete_all").Methods("POST").HandlerFunc(deleteAllHandler)
-  curateRoutes.Path("/v/{id}").HandlerFunc(curateVideoHandler)
+  r.PathPrefix("/public/").Handler(
+    http.StripPrefix("/public/", http.FileServer(http.Dir("./public"))))
 
   // all API routes starts here
 
@@ -48,11 +42,9 @@ func init() {
   videos.Methods("GET").HandlerFunc(VideoIndexHandler)
 
   r.HandleFunc("/playlists", playlistHandler)
-  r.HandleFunc("/v2/playlists", v2playlistHandler)
 
   // videos singular
   video := r.PathPrefix("/videos/{id}").Subrouter()
-  // video.Methods("GET").Path("/edit").HandlerFunc(videoEditHandler)
   video.Methods("GET").HandlerFunc(videoShowHandler)
   video.Methods("PUT", "POST").HandlerFunc(videoUpdateHandler)
   video.Methods("DELETE").HandlerFunc(videoDeleteHandler)
@@ -65,40 +57,17 @@ func init() {
   ytCrawl.Path("/fetch_playlists").HandlerFunc(fetchPlaylistHandler)
   ytCrawl.Path("/fetch_videos").HandlerFunc(fetchVideosHandler)
 
+  // curation pages
+  curateRoutes := r.PathPrefix("/curate").Subrouter()
+  curateRoutes.Path("/list").HandlerFunc(curateListHandler)
+  // disable DeleteAll for production
+  // curateRoutes.Path("/delete_all").Methods("POST").HandlerFunc(deleteAllHandler)
+  curateRoutes.Path("/v/{id}").HandlerFunc(curateVideoHandler)
   http.Handle("/", r)
 }
 
 func homePageHandler(w http.ResponseWriter, r *http.Request) {
   http.ServeFile(w, r, "public/index.html")
-}
-
-func tagPageHandler(w http.ResponseWriter, r *http.Request) {
-  // TODO (jacob): replace with actual content
-  vars := mux.Vars(r)
-  tag := vars["tag"]
-  q := datastore.NewQuery("Video")
-  if tag != "" {
-    q = q.Filter("Tags =", tag)
-  }
-  c := appengine.NewContext(r)
-  var videos []Video
-  _, err := q.GetAll(c, &videos)
-  if err != nil {
-    http.Error(w, "internal server error", http.StatusInternalServerError)
-    return
-  }
-
-  if len(videos) == 0 {
-    videos = []Video{}
-  }
-
-  jsn, err := json.Marshal(&videos)
-  if err != nil {
-    http.Error(w, "internal server error", http.StatusInternalServerError)
-    return
-  }
-  w.Header().Set("Content-Type", "application/json")
-  w.Write(jsn)
 }
 
 func videoPageHandler(w http.ResponseWriter, r *http.Request) {
@@ -228,7 +197,7 @@ func sortMapByValue(m map[string][]Video) PairList {
   return p
 }
 
-func v2playlistHandler(w http.ResponseWriter, r *http.Request) {
+func playlistHandler(w http.ResponseWriter, r *http.Request) {
   c := appengine.NewContext(r)
   var videos []Video
   q := datastore.NewQuery("Video").Filter("IsCurated =", true)
@@ -250,35 +219,6 @@ func v2playlistHandler(w http.ResponseWriter, r *http.Request) {
 
   tagByVideoCount := sortMapByValue(tagMap)
   jsn, err := json.Marshal(tagByVideoCount)
-  if err != nil {
-    http.Error(w, err.Error(), http.StatusInternalServerError)
-    return
-  }
-  w.Header().Set("Content-Type", "application/json")
-  w.Write(jsn)
-}
-
-func playlistHandler(w http.ResponseWriter, r *http.Request) {
-  c := appengine.NewContext(r)
-  var videos []Video
-  q := datastore.NewQuery("Video").Filter("IsCurated =", true)
-  _, err := q.GetAll(c, &videos)
-  if err != nil {
-    http.Error(w, err.Error(), http.StatusInternalServerError)
-    return
-  }
-
-  tagMap := make(map[string][]Video)
-
-  for _, v := range videos {
-    for _, tag := range v.Tags {
-      tag = strings.Trim(strings.ToLower(tag), "")
-      tagMap[tag] = append(tagMap[tag], v)
-    }
-  }
-  c.Infof("number of curated videos : %d", len(videos))
-
-  jsn, err := json.Marshal(tagMap)
   if err != nil {
     http.Error(w, err.Error(), http.StatusInternalServerError)
     return

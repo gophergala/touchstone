@@ -4,7 +4,6 @@
 	<ul class="gallery"> 
 		<li class="gallery__item" ng-click="navigateToVideo(video.id)" ng-repeat="video in category.videos">
 
-			<div class="videoDate">{{ video.published_at | date : longdate}}</div>
 			<img ng-src="{{video.medium_thumbnail.URL}}" width="{{video.medium_thumbnail.Width}}" height="{{video.medium_thumbnail.Height}}" >
 			<div class="title">{{ video.Title }}</div>
 		</li>

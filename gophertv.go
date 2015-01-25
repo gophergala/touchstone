@@ -200,9 +200,9 @@ func VideoIndexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func playlistHandler(w http.ResponseWriter, r *http.Request) {
+  c := appengine.NewContext(r)
   var videos []Video
   q := datastore.NewQuery("Video").Filter("IsCurated =", true)
-  c := appengine.NewContext(r)
   _, err := q.GetAll(c, &videos)
   if err != nil {
     http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -217,6 +217,7 @@ func playlistHandler(w http.ResponseWriter, r *http.Request) {
       tagMap[tag] = append(tagMap[tag], v)
     }
   }
+  c.Infof("number of curated videos : %d", len(videos))
 
   jsn, err := json.Marshal(tagMap)
   if err != nil {
@@ -228,8 +229,9 @@ func playlistHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func curateListHandler(w http.ResponseWriter, r *http.Request) {
+  c := appengine.NewContext(r)
   q := datastore.NewQuery("Video").
-    Filter("IsCurated =", false).Order("-ViewCount").Limit(10)
+    Filter("IsCurated =", false).Order("-ViewCount").Limit(100)
 
   var n int64
   var err error
@@ -240,10 +242,9 @@ func curateListHandler(w http.ResponseWriter, r *http.Request) {
       http.Error(w, err.Error(), http.StatusInternalServerError)
       return
     }
-    log.Printf("current offset: %d", n)
+    c.Infof("current offset: %d", n)
     q = q.Offset(int(n))
   }
-  c := appengine.NewContext(r)
   var videos []Video
   _, err = q.GetAll(c, &videos)
   if err != nil {
@@ -255,7 +256,7 @@ func curateListHandler(w http.ResponseWriter, r *http.Request) {
     http.Error(w, err.Error(), http.StatusInternalServerError)
     return
   }
-  log.Printf("executing the template, new offset: n: %d len: %d", n, len(videos))
+  c.Infof("executing the template, new offset: n: %d len: %d", n, len(videos))
   err = t.Execute(w, struct {
     Videos []Video
     Offset int

@@ -14,7 +14,7 @@ import (
 )
 
 // TODO (sunil): Read it from Conf or commandline param
-const developerKey = "AIzaSyCYiZ-kHx5LHLox-wLNtgyJoJwvUoMFt_g"
+const developerKey = "xxxxx"
 const maxResults = 50
 
 func getYoutubeService(c appengine.Context) (*youtube.Service, error) {

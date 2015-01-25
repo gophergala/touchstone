@@ -71,39 +71,31 @@ li {
 
 /* line 67, ../sass/screen.sass */
 .gallery {
-  width: 87.34177%;
-  float: left;
   width: 94.91525%;
   float: left;
   margin-right: 1.63934%;
 }
-/* line 66, ../../../../../Library/Ruby/Gems/2.0.0/gems/susy-2.2.1/sass/susy/language/susy/_gallery.scss */
-.gallery:nth-child(1n + 1) {
-  margin-left: 0;
-  margin-right: -100%;
-  clear: both;
-  margin-left: 0;
-}
 
-/* line 71, ../sass/screen.sass */
+/* line 70, ../sass/screen.sass */
 .gallery__item {
-  border: 1px solid #F2F2F2;
+  float: left;
   padding: 10px;
-  width: 32.20339%;
+  margin: 10px 0px;
   list-style: none;
   cursor: pointer;
 }
-/* line 79, ../sass/screen.sass */
+/* line 77, ../sass/screen.sass */
 .gallery__item:hover {
   color: #887e81;
 }
 
-/* line 81, ../sass/screen.sass */
+/* line 80, ../sass/screen.sass */
 .title {
   font-size: 16px;
   font-weight: 400;
   padding-bottom: 6px;
   margin-top: 20px;
+  width: 320px;
 }
 
 /* line 87, ../sass/screen.sass */

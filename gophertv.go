@@ -204,6 +204,7 @@ func VideoIndexHandler(w http.ResponseWriter, r *http.Request) {
 // A data structure to hold a key/value pair.
 type Pair struct {
   Key    string  `json:"CategoryName"`
+  Count  int     `json:"count"`
   Videos []Video `json:"videos"`
 }
 
@@ -212,14 +213,14 @@ type PairList []Pair
 
 func (p PairList) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
 func (p PairList) Len() int           { return len(p) }
-func (p PairList) Less(i, j int) bool { return len(p[i].Videos) > len(p[j].Videos) }
+func (p PairList) Less(i, j int) bool { return p[i].Count > p[j].Count }
 
 // A function to turn a map into a PairList, then sort and return it.
 func sortMapByValue(m map[string][]Video) PairList {
   p := make(PairList, len(m))
   i := 0
   for k, v := range m {
-    p[i] = Pair{strings.Title(k), v}
+    p[i] = Pair{strings.Title(k), len(v), v}
     i++
   }
   sort.Sort(p)

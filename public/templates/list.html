@@ -1,5 +1,5 @@
 <div class="Category" ng-repeat="category in categories">
-	<h2> {{category.CategoryName}}</h2>
+	<h2 ng-click="navToCategory(category.CategoryName)"> {{category.CategoryName}}</h2>
 
 	<ul class="gallery"> 
 		<li class="gallery__item" ng-click="navigateToVideo(video.id)" ng-repeat="video in category.videos">

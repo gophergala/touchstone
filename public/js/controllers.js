@@ -17,6 +17,9 @@ tvcontrollers.controller('HomeCtrl', [ '$scope', '$http', '$location',
 									$scope.navigateToVideo = function(id) {
 										$location.path('/video/' + id);
 									};
+									$scope.navToCategory = function(id) {
+										$location.path('/category/' + id);
+									};
 								}]);
 
 tvcontrollers.controller('CategoryDetailCtrl', [ '$scope', '$http', '$location',

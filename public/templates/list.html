@@ -6,7 +6,7 @@
 					<li ng-click="navigateToVideo(video.id)">
 						<div class="title">{{ video.Title }}</div>
 						<div class="videoImage"><img ng-src="{{ video.default_thumbnail.URL }}" width="{{video.default_thumbnail.Width}}" height="{{video.default_thumbnail.Height}}"</div>
-						<div class="videoDate">{{ video.published_at }}</div>
+						<div class="videoDate">{{ video.published_at | date : longdate}}</div>
 					</li>
 				</ul>
 

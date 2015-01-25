@@ -155,7 +155,10 @@ func sortMapByValue(m map[string][]Video) PairList {
 func playlistHandler(w http.ResponseWriter, r *http.Request) {
   c := appengine.NewContext(r)
   var videos []Video
-  q := datastore.NewQuery("Video").Filter("IsCurated =", true)
+  q := datastore.NewQuery("Video").
+    Filter("IsCurated =", true).
+    Order("-ViewCount")
+
   _, err := q.GetAll(c, &videos)
   if err != nil {
     http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -166,12 +169,10 @@ func playlistHandler(w http.ResponseWriter, r *http.Request) {
 
   tags := []string{
     "go intro",
-    "overview",
     "concurrency",
     "web",
     "interfaces",
     "dependency management",
-    "data processing",
     "best practices",
     "case study",
     "database",
@@ -179,12 +180,13 @@ func playlistHandler(w http.ResponseWriter, r *http.Request) {
     "gophercon2014",
     "dotgo2014",
     "performance",
-    "compiler",
     "go philosophy",
     "tutorial",
     "fosdem2014",
     "distributed systems",
+    "data processing",
     "data structures",
+    "compiler",
     "app engine",
     "robotics",
     "testing",
@@ -193,7 +195,6 @@ func playlistHandler(w http.ResponseWriter, r *http.Request) {
     "andrew gerrand",
     "russ cox",
     "brad fitzpatrick",
-    "i/o",
     "fun",
   }
 

@@ -21,8 +21,11 @@ tvcontrollers.controller('HomeCtrl', [ '$scope', '$http', '$location',
 
 tvcontrollers.controller('CategoryDetailCtrl', [ '$scope', '$http',
 								function($scope, $http) {
-									$http.get('controllerDetailRoute').success(function(data){
-										$scope.controllerInfo = data;
+									var tag_id = $location.path().split('/');
+									tag_id = tag_id[tag_id.length - 1];
+
+									$http.get('t/' + tag_id).success(function(data){
+										$scope.category = data;
 									});
 
 								}]);

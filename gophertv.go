@@ -35,12 +35,9 @@ func init() {
 
   // all API routes starts here
 
-  // tags routes
-
   // videos collection
   videos := r.Path("/videos").Subrouter()
   videos.Methods("GET").HandlerFunc(VideoIndexHandler)
-
   r.HandleFunc("/playlists", playlistHandler)
 
   // videos singular
@@ -70,48 +67,6 @@ func homePageHandler(w http.ResponseWriter, r *http.Request) {
   http.ServeFile(w, r, "public/index.html")
 }
 
-func videoPageHandler(w http.ResponseWriter, r *http.Request) {
-  vars := mux.Vars(r)
-  id := vars["id"]
-  var video Video
-  c := appengine.NewContext(r)
-  key := datastore.NewKey(c, "Video", id, 0, nil)
-  err := datastore.Get(c, key, &video)
-  if err != nil {
-    if err == datastore.ErrNoSuchEntity {
-      http.Error(w, "video not found", http.StatusNotFound)
-      return
-    }
-    http.Error(w, err.Error(), http.StatusInternalServerError)
-    return
-  }
-
-  jsn, err := json.Marshal(video)
-
-  if err != nil {
-    http.Error(w, err.Error(), http.StatusInternalServerError)
-    return
-  }
-  w.Header().Set("Content-Type", "application/json")
-  w.Write(jsn)
-}
-
-func deleteAllHandler(w http.ResponseWriter, r *http.Request) {
-  q := datastore.NewQuery("Video").Limit(400).KeysOnly()
-  var videos []Video
-  c := appengine.NewContext(r)
-  keys, err := q.GetAll(c, &videos)
-  if err != nil {
-    http.Error(w, err.Error(), http.StatusInternalServerError)
-    return
-  }
-  err = datastore.DeleteMulti(c, keys)
-  if err != nil {
-    http.Error(w, err.Error(), http.StatusInternalServerError)
-    return
-  }
-  w.WriteHeader(http.StatusOK)
-}
 func VideoIndexHandler(w http.ResponseWriter, r *http.Request) {
   q := datastore.NewQuery("Video")
   tag := r.URL.Query().Get("tag")
@@ -135,7 +90,7 @@ func VideoIndexHandler(w http.ResponseWriter, r *http.Request) {
   if limit != "" {
     n, err := strconv.ParseInt(limit, 10, 64)
     if err != nil {
-      http.Error(w, "internal server error", http.StatusInternalServerError)
+      http.Error(w, "invalid limit", http.StatusBadRequest)
       return
     }
     q = q.Limit(int(n))
@@ -144,7 +99,7 @@ func VideoIndexHandler(w http.ResponseWriter, r *http.Request) {
   if offset != "" {
     n, err := strconv.ParseInt(offset, 10, 64)
     if err != nil {
-      http.Error(w, "internal server error", http.StatusInternalServerError)
+      http.Error(w, "invalid offset", http.StatusBadRequest)
       return
     }
     q = q.Offset(int(n))
@@ -153,7 +108,7 @@ func VideoIndexHandler(w http.ResponseWriter, r *http.Request) {
   var videos []Video
   _, err := q.GetAll(c, &videos)
   if err != nil {
-    http.Error(w, "internal server error", http.StatusInternalServerError)
+    http.Error(w, err.Error(), http.StatusInternalServerError)
     return
   }
 
@@ -209,6 +164,39 @@ func playlistHandler(w http.ResponseWriter, r *http.Request) {
 
   tagMap := make(map[string][]Video)
 
+  tags := []string{
+    "go intro",
+    "overview",
+    "concurrency",
+    "web",
+    "interfaces",
+    "dependency management",
+    "data processing",
+    "best practices",
+    "case study",
+    "database",
+    "interview",
+    "gophercon2014",
+    "dotgo2014",
+    "performance",
+    "compiler",
+    "go philosophy",
+    "tutorial",
+    "fosdem2014",
+    "distributed systems",
+    "data structures",
+    "app engine",
+    "robotics",
+    "testing",
+    "deployment",
+    "rob pike",
+    "andrew gerrand",
+    "russ cox",
+    "brad fitzpatrick",
+    "i/o",
+    "fun",
+  }
+
   for _, v := range videos {
     for _, tag := range v.Tags {
       tag = strings.Trim(strings.ToLower(tag), "")
@@ -216,8 +204,21 @@ func playlistHandler(w http.ResponseWriter, r *http.Request) {
     }
   }
   c.Infof("number of curated videos : %d", len(videos))
-
-  tagByVideoCount := sortMapByValue(tagMap)
+  var tagByVideoCount PairList
+  for _, t := range tags {
+    videos, ok := tagMap[strings.Trim(strings.ToLower(t), "")]
+    if ok {
+      pair := Pair{
+        Key:    strings.Title(t),
+        Count:  len(videos),
+        Videos: videos,
+      }
+      if len(videos) > 4 {
+        pair.Videos = videos[:4]
+      }
+      tagByVideoCount = append(tagByVideoCount, pair)
+    }
+  }
   jsn, err := json.Marshal(tagByVideoCount)
   if err != nil {
     http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -617,4 +618,21 @@ func SaveVideo(c appengine.Context, video *youtube.Video) error {
     log.Printf("error saving video :: %v", err)
   }
   return err
+}
+
+func deleteAllHandler(w http.ResponseWriter, r *http.Request) {
+  q := datastore.NewQuery("Video").Limit(400).KeysOnly()
+  var videos []Video
+  c := appengine.NewContext(r)
+  keys, err := q.GetAll(c, &videos)
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+  err = datastore.DeleteMulti(c, keys)
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+  w.WriteHeader(http.StatusOK)
 }

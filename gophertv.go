@@ -212,8 +212,8 @@ func playlistHandler(w http.ResponseWriter, r *http.Request) {
   tagMap := make(map[string][]Video)
 
   for _, v := range videos {
-    log.Printf("found video %s with tags %s", v.Title, v.Tags)
     for _, tag := range v.Tags {
+      tag = strings.Trim(strings.ToLower(tag), "")
       tagMap[tag] = append(tagMap[tag], v)
     }
   }

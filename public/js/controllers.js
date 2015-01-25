@@ -15,6 +15,9 @@ tvcontrollers.controller('HomeCtrl', [ '$scope', '$http', '$location',
 
 									});
 
+									$scope.navigateToHome = function(id) {
+										$location.path('/');
+									};
 									$scope.navigateToVideo = function(id) {
 										$location.path('/video/' + id);
 									};
@@ -29,7 +32,7 @@ tvcontrollers.controller('CategoryDetailCtrl', [ '$scope', '$http', '$location',
 									tag_id = tag_id[tag_id.length - 1];
 									$scope.categoryName = tag_id;
 
-									$http.get('t/' + tag_id).success(function(data){
+									$http.get('videos?tag=' + tag_id).success(function(data){
 										$scope.videos = data;
 									});
 

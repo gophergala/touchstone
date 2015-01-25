@@ -147,7 +147,7 @@ func VideoIndexHandler(w http.ResponseWriter, r *http.Request) {
   q := datastore.NewQuery("Video")
   tag := r.URL.Query().Get("tag")
   if tag != "" {
-    q = q.Filter("Tags =", tag)
+    q = q.Filter("Tags =", strings.Trim(strings.ToLower(tag), ""))
   }
   isCurated := r.URL.Query().Get("is_curated")
   if isCurated == "" {
@@ -219,7 +219,7 @@ func sortMapByValue(m map[string][]Video) PairList {
   p := make(PairList, len(m))
   i := 0
   for k, v := range m {
-    p[i] = Pair{k, v}
+    p[i] = Pair{strings.Title(k), v}
     i++
   }
   sort.Sort(p)

@@ -19,8 +19,8 @@ tvcontrollers.controller('HomeCtrl', [ '$scope', '$http', '$location',
 									};
 								}]);
 
-tvcontrollers.controller('CategoryDetailCtrl', [ '$scope', '$http',
-								function($scope, $http) {
+tvcontrollers.controller('CategoryDetailCtrl', [ '$scope', '$http', '$location',
+								function($scope, $http, $location) {
 									var tag_id = $location.path().split('/');
 									tag_id = tag_id[tag_id.length - 1];
 

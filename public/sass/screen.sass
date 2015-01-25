@@ -65,10 +65,11 @@ li
   list-style: none
 
 .gallery
-  +gallery(10 of 12)
+  +gallery(14 of 16)
   +span(11 of 12 wider)
 
 .gallery__item
+  display:inline
   border: 1px solid $lightgray
   padding: 10px
   width: span(4 of 12)
@@ -76,12 +77,12 @@ li
   clear:none
   cursor: pointer
   &:hover
-    background-color: scale-lightness($lightgray, -20%)
-
+    color: scale-lightness($brown, -20%)
 .title
   font-size: 16px
   font-weight: 400
   padding-bottom: 6px
+  margin-top: 20px
 
 .videoDate
   font-size: 14px

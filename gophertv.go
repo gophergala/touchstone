@@ -203,7 +203,7 @@ func VideoIndexHandler(w http.ResponseWriter, r *http.Request) {
 
 // A data structure to hold a key/value pair.
 type Pair struct {
-  Key    string  `json:"tag"`
+  Key    string  `json:"CategoryName"`
   Videos []Video `json:"videos"`
 }
 

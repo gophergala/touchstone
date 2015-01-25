@@ -5,12 +5,13 @@ tvcontrollers.controller('HomeCtrl', [ '$scope', '$http', '$location',
 									$scope.categories = [];
 									//$scope.categories = [ {"CategoryName": "One", "videos": [{"Title": "Video Title"}]}];	
 
-									$http.get('playlists').success(function(data) {
-										for (var key in data) {
-  										if (data.hasOwnProperty(key)) {
-													$scope.categories.push({"CategoryName": key, "videos": data[key] });
-  											}
-										}
+									$http.get('v2/playlists').success(function(data) {
+										// for (var key in data) {
+  									// 	if (data.hasOwnProperty(key)) {
+										// 			$scope.categories.push({"CategoryName": key, "videos": data[key] });
+  									// 		}
+										// }
+                    $scope.categories = data;
 
 									});
 

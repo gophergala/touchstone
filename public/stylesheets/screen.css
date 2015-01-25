@@ -2,13 +2,32 @@
  * In this file you should write your main styles. (or centralize your imports)
  * Import this file using the following HTML or equivalent:
  * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
-@import url(http://fonts.googleapis.com/css?family=Lato:400,700,400italic);
-/* line 14, ../sass/screen.sass */
-body {
-  font-family: Lato, Helvetica, Arial, sans-serif;
+@import url(http://fonts.googleapis.com/css?family=Lato:400,700,400italic,900);
+/* line 21, ../sass/screen.sass */
+.header {
+  background-color: #2A2E3E;
+  color: #FFF;
+  padding: 25px 0px 0px 10px;
+  height: 70px;
+  font-weight: 900;
+  font-size: 30px;
+  border-bottom: 1px solid #535b7b;
 }
 
-/* line 17, ../sass/screen.sass */
+/* line 30, ../sass/screen.sass */
+.redtext {
+  color: #F43752;
+}
+
+/* line 32, ../sass/screen.sass */
+body {
+  font-family: Lato, Helvetica, Arial, sans-serif;
+  padding: 0;
+  margin: 0;
+  background-color: #F2F2F2;
+}
+
+/* line 38, ../sass/screen.sass */
 .wrap {
   max-width: 90%;
   margin-left: auto;
@@ -32,16 +51,14 @@ body {
   clear: both;
 }
 
-/* line 21, ../sass/screen.sass */
+/* line 42, ../sass/screen.sass */
 .content {
   margin-top: 10vh;
   height: 80vh;
-  background: rgba(113, 218, 210, 0.8);
 }
 
-/* line 26, ../sass/screen.sass */
+/* line 46, ../sass/screen.sass */
 h2 {
   padding: 10px;
-  text-align: center;
   color: #555555;
 }

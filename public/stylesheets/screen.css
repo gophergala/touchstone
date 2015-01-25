@@ -78,17 +78,18 @@ li {
 
 /* line 70, ../sass/screen.sass */
 .gallery__item {
+  float: left;
   padding: 10px;
   margin: 10px 0px;
   list-style: none;
   cursor: pointer;
 }
-/* line 77, ../sass/screen.sass */
+/* line 78, ../sass/screen.sass */
 .gallery__item:hover {
   color: #887e81;
 }
 
-/* line 80, ../sass/screen.sass */
+/* line 81, ../sass/screen.sass */
 .title {
   font-size: 16px;
   font-weight: 400;
@@ -97,13 +98,13 @@ li {
   width: 320px;
 }
 
-/* line 87, ../sass/screen.sass */
+/* line 88, ../sass/screen.sass */
 .videoDate {
   font-size: 14px;
   padding-top: 3px;
 }
 
-/* line 92, ../sass/screen.sass */
+/* line 93, ../sass/screen.sass */
 .Category h2 {
   font-size: 24px;
 }
@@ -115,7 +116,7 @@ li {
   clear: both;
 }
 
-/* line 98, ../sass/screen.sass */
+/* line 99, ../sass/screen.sass */
 p.videoDescription {
   width: 80%;
   line-height: 1.45em;

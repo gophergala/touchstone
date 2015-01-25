@@ -17,12 +17,19 @@ tvcontrollers.controller('HomeCtrl', [ '$scope', '$http', '$location',
 									$scope.navigateToVideo = function(id) {
 										$location.path('/video/' + id);
 									};
+									$scope.navToCategory = function(id) {
+										$location.path('/category/' + id);
+									};
 								}]);
 
-tvcontrollers.controller('CategoryDetailCtrl', [ '$scope', '$http',
-								function($scope, $http) {
-									$http.get('controllerDetailRoute').success(function(data){
-										$scope.controllerInfo = data;
+tvcontrollers.controller('CategoryDetailCtrl', [ '$scope', '$http', '$location',
+								function($scope, $http, $location) {
+									var tag_id = $location.path().split('/');
+									tag_id = tag_id[tag_id.length - 1];
+									$scope.categoryName = tag_id;
+
+									$http.get('t/' + tag_id).success(function(data){
+										$scope.videos = data;
 									});
 
 								}]);

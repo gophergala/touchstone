@@ -1,11 +1,11 @@
 <div class="Category" ng-repeat="category in categories">
-	<h2> {{category.CategoryName}}</h2>
+	<h2 ng-click="navToCategory(category.CategoryName)"> {{category.CategoryName}}</h2>
 
 	<ul class="gallery"> 
 		<li class="gallery__item" ng-click="navigateToVideo(video.id)" ng-repeat="video in category.videos">
-			<div class="title">{{ video.Title }}</div>
+
 			<img ng-src="{{video.medium_thumbnail.URL}}" width="{{video.medium_thumbnail.Width}}" height="{{video.medium_thumbnail.Height}}" >
-			<div class="videoDate">{{ video.published_at | date : longdate}}</div>
+			<div class="title">{{ video.Title }}</div>
 		</li>
 	</ul>
 </div>

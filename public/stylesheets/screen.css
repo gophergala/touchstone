@@ -64,54 +64,45 @@ h2 {
   color: #555555;
 }
 
-/* line 64, ../sass/screen.sass */
+/* line 63, ../sass/screen.sass */
+.Category h2 {
+  cursor: pointer;
+}
+
+/* line 66, ../sass/screen.sass */
 li {
   list-style: none;
 }
 
-/* line 67, ../sass/screen.sass */
-.gallery {
-  width: 83.05085%;
-  float: left;
-  width: 94.91525%;
-  float: left;
-  margin-right: 1.63934%;
-}
-/* line 66, ../../../../../Library/Ruby/Gems/2.0.0/gems/susy-2.2.1/sass/susy/language/susy/_gallery.scss */
-.gallery:nth-child(1n + 1) {
-  margin-left: 0;
-  margin-right: -100%;
-  clear: both;
-  margin-left: 0;
-}
-
-/* line 71, ../sass/screen.sass */
+/* line 70, ../sass/screen.sass */
 .gallery__item {
-  border: 1px solid #F2F2F2;
+  float: left;
   padding: 10px;
-  width: 32.20339%;
+  margin: 10px 0px;
   list-style: none;
   cursor: pointer;
+  max-width: 320px;
 }
 /* line 78, ../sass/screen.sass */
 .gallery__item:hover {
-  background-color: #c2c2c2;
+  color: #887e81;
 }
 
-/* line 81, ../sass/screen.sass */
+/* line 82, ../sass/screen.sass */
 .title {
   font-size: 16px;
   font-weight: 400;
   padding-bottom: 6px;
+  margin-top: 20px;
 }
 
-/* line 86, ../sass/screen.sass */
+/* line 88, ../sass/screen.sass */
 .videoDate {
   font-size: 14px;
   padding-top: 3px;
 }
 
-/* line 91, ../sass/screen.sass */
+/* line 93, ../sass/screen.sass */
 .Category h2 {
   font-size: 24px;
 }
@@ -123,7 +114,7 @@ li {
   clear: both;
 }
 
-/* line 97, ../sass/screen.sass */
+/* line 99, ../sass/screen.sass */
 p.videoDescription {
   width: 80%;
   line-height: 1.45em;

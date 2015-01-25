@@ -60,28 +60,30 @@ h2
 
   color: #555555
 
+.Category h2
+  cursor: pointer
 
 li
   list-style: none
 
-.gallery
-  +gallery(10 of 12)
-  +span(11 of 12 wider)
 
 .gallery__item
-  border: 1px solid $lightgray
+  display:inline-block
+  float: left
   padding: 10px
-  width: span(4 of 12)
+  margin: 10px 0px
   list-style: none  
-  clear:none
   cursor: pointer
+  clear:none
   &:hover
-    background-color: scale-lightness($lightgray, -20%)
+    color: scale-lightness($brown, -20%)
+  max-width: 320px
 
 .title
   font-size: 16px
   font-weight: 400
   padding-bottom: 6px
+  margin-top: 20px
 
 .videoDate
   font-size: 14px

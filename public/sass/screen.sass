@@ -74,11 +74,12 @@ li
   width: span(4 of 12)
   list-style: none  
   clear:none
-  &:nth-child(5)
-    +last
-  
+  cursor: pointer
+  &:hover
+    background-color: scale-lightness($lightgray, -20%)
+
 .title
-  font-size: 14px
+  font-size: 16px
   font-weight: 400
   padding-bottom: 6px
 

@@ -1,8 +1,8 @@
 <div>
-<h2>{{ category.CategoryName }}</h2>
+<h2>{{ categoryName }}</h2>
 
 <ul class="gallery">
-	<li class="gallery_item">
+	<li class="gallery_item" ng-repeat="video in videos">
 		<img ng-src="{{video.medium_thumbnail.URL}}" width="{{video.medium_thumbnail.Width}}" height="{{video.medium_thumbnail.Height}}" >
 		<div class="title">{{video.Title}}</div>
 

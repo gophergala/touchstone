@@ -23,9 +23,10 @@ tvcontrollers.controller('CategoryDetailCtrl', [ '$scope', '$http', '$location',
 								function($scope, $http, $location) {
 									var tag_id = $location.path().split('/');
 									tag_id = tag_id[tag_id.length - 1];
+									$scope.categoryName = tag_id;
 
 									$http.get('t/' + tag_id).success(function(data){
-										$scope.category = data;
+										$scope.videos = data;
 									});
 
 								}]);

@@ -9,7 +9,7 @@
 
 @import url(http://fonts.googleapis.com/css?family=Lato:400,700,400italic,900)
 
-$susy: (columns: 12, gutters: 1 / 4 )
+$susy: (columns: 12, gutters: 1 / 4, debug: (image: show) )
 
 $darkblue: #2A2E3E
 $red: #F43752
@@ -17,6 +17,14 @@ $gray: #CCCCCC
 $lightgray: #F2F2F2
 $brown: #A7A0A2
 $white: #FFF
+
+
+=cf() 
+  &:after
+    content: " " 
+    display: block
+    clear: both
+
 
 .header
   background-color: $darkblue
@@ -34,15 +42,49 @@ body
   padding: 0
   margin: 0
   background-color: $lightgray
-
+  color: $brown 
 .wrap
   +container(90%)
   height: 100vh
 
 .content
-  margin-top: 10vh
+  margin-top: 4vh
   height: 80vh
-
+  +span(12 of 12)
+  +cf
+  
 h2
   padding: 10px
   color: #555555
+
+
+li
+  list-style: none
+
+
+ul.VideosShort
+  +cf
+.VideosShort li
+  +gallery(10 of 12)
+
+.VideosShort .title
+  font-size: 16px
+  font-weight: 400
+  padding-bottom: 5px
+
+.VideosShort .videoDate
+  font-size: 14px
+  padding-top: 3px
+
+  
+.Category h2
+  font-size: 24px
+
+.Category
+  +cf
+  width: 100%
+
+
+p.videoDescription
+  width: 80%
+  line-height: 1.45em
